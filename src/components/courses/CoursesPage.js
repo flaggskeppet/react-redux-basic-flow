@@ -1,68 +1,47 @@
-import React from 'react';
+import React, {PropTypes} from 'react';
+import { bindActionCreators } from 'redux';
 import {connect} from 'react-redux';
+import {browserHistory} from 'react-router';
 import * as courseActions from '../../actions/courseActions';
+import CourseList from './CourseList';
 
 class CoursesPage extends React.Component {
-    constructor(props, context){
-        super(props, context);
+  constructor(props, context) {
+    super(props, context);
 
-        this.state = {
-            course: {title: ''}
-        };
-    
-        this.onTitleChange = this.onTitleChange.bind(this);
-        this.onClickSave = this.onClickSave.bind(this);
-    }
+    this.redirectToAddCoursePage = this.redirectToAddCoursePage.bind(this);
+  }
 
-    // TODO: Step through redux flow. Then copy this to new flux-folder
+  redirectToAddCoursePage() {
+    browserHistory.push('/course');
+  }
 
-
-    onTitleChange(event){
-        const course = this.state.course;
-        course.title = event.target.value;
-        this.setState({course:course})
-
-    }
-
-    onClickSave() {
-        //alert(`Saving ${this.state.course.title}`);
-        this.props.dispatch(courseActions.createCourse(this.state.course));
-    }
-
-    courseRow(course, index){
-        return(<div id={index}>{course.title}</div>)
-    }
-
-    render() {
-        debugger;
-        return(
-            <div>
-                <h1>Courses</h1>
-                {this.props.courses.map(this.courseRow)}
-                <h2>Add course</h2>
-                <input  type="text"
-                        onChange={this.onTitleChange}
-                        value={this.state.course.title} />
-                <input  type="submit"
-                        onClick={this.onClickSave}
-                        value="Save" />
-                        
-            
-            </div>
-        );
-    }
+  render() {
+    const {courses} = this.props;
+    return (
+      <div>
+        <h1>Courses</h1>
+        <CourseList courses={courses}/>
+      </div>
+    );
+  }
 }
+
+CoursesPage.propTypes = {
+  actions: PropTypes.object.isRequired,
+  courses: PropTypes.array.isRequired
+};
+
 function mapStateToProps(state, ownProps) {
-    debugger;
-    return {
-        courses: state.courses // En instans av vår courseProvider, se courseProvder.js
-    }
-
+  return {
+    courses: state.courses
+  };
 }
 
-// CoursesPage.propTypes = {
-//     dispatch: PropTypes.func.isRequired,
-//     courses: PropTypes.array.isRequired
-// }
+function mapDispatchToProps(dispatch) {
+  return {
+    actions: bindActionCreators(courseActions, dispatch)
+  };
+}
 
-export default connect(mapStateToProps)(CoursesPage);
+export default connect(mapStateToProps, mapDispatchToProps)(CoursesPage);
