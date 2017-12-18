@@ -71,6 +71,7 @@ export class ManageCoursePage extends React.Component {
 
   render() {
     return (
+      <div><h1>Manage course</h1>
       <CourseForm
         course={this.state.course}
         onChange={this.updateCourseState}
@@ -79,6 +80,7 @@ export class ManageCoursePage extends React.Component {
         allAuthors={this.props.authors}
         saving={this.state.saving}
       />
+      </div>
     );
   }
 }
@@ -110,8 +112,8 @@ function mapStateToProps(state, ownProps) {
   }
 
   return {
-    course: course,
-    authors: authorsFormattedForDropdown(state.authors)
+     course: course,
+     authors: authorsFormattedForDropdown(state.authors)
   };
 }
 
